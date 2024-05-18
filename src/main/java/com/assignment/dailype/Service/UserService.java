@@ -1,6 +1,7 @@
 package com.assignment.dailype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,5 +21,8 @@ public interface UserService {
 	String deleteUserById(UUID userId);
 
 	String deleteUserByMobileNumber(String mobNum);
+
+
+	String updateUsers(List<String> userIds, Map<String, Object> updateData);
 }
 

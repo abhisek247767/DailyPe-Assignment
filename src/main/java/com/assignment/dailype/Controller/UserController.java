@@ -1,6 +1,8 @@
 package com.assignment.dailype.Controller;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.assignment.dailype.Model.User;
 import com.assignment.dailype.Requests.DeleteUserRequest;
+import com.assignment.dailype.Requests.UpdateUserRequest;
 import com.assignment.dailype.Service.UserService;
 
 @RestController
@@ -71,5 +74,17 @@ public class UserController {
         } else {
             return ResponseEntity.badRequest().body(result);
         }
+    }
+    
+    
+    
+    @PostMapping("/update_user")
+    public ResponseEntity<Map<String, String>> updateUser(@RequestBody Map<String, Object> request) {
+        List<String> userIds = (List<String>) request.get("user_ids");
+        Map<String, Object> updateData = (Map<String, Object>) request.get("update_data");
+
+        String result = userService.updateUsers(userIds, updateData);
+
+        return ResponseEntity.ok(Collections.singletonMap("message", result));
     }
 }

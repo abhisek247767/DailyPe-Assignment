@@ -2,8 +2,10 @@ package com.assignment.dailype.Service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -105,4 +107,58 @@ public class UserServiceImpl implements UserService {
         }
         return "Mobile number not found";
     }
+   
+    
+    
+    @Override
+    public String updateUsers(List<String> userIds, Map<String, Object> updateData) {
+        if (userIds == null || userIds.isEmpty()) {
+            return "User IDs must be provided.";
+        }
+
+        if (updateData == null || updateData.isEmpty()) {
+            return "Update data must be provided.";
+        }
+
+        List<UUID> uuids = userIds.stream().map(UUID::fromString).collect(Collectors.toList());
+        List<User> users = userRepository.findAllById(uuids);
+
+        if (users.size() != uuids.size()) {
+            return "Some user IDs were not found.";
+        }
+
+        if (updateData.containsKey("manager_id") && updateData.size() > 1) {
+            return "Manager ID can be updated in bulk only.";
+        }
+
+        for (User user : users) {
+            if (updateData.containsKey("full_name")) {
+                user.setFullName((String) updateData.get("full_name"));
+            }
+            if (updateData.containsKey("mob_num")) {
+                user.setMobNum((String) updateData.get("mob_num"));
+            }
+            if (updateData.containsKey("pan_num")) {
+                user.setPanNum((String) updateData.get("pan_num"));
+            }
+            if (updateData.containsKey("manager_id")) {
+                UUID newManagerId = UUID.fromString((String) updateData.get("manager_id"));
+                if (!managerRepository.existsById(newManagerId)) {
+                    return "Invalid manager ID.";
+                }
+                if (!newManagerId.equals(user.getManagerId())) {
+                    user.setManagerId(newManagerId);
+                    user.setUpdatedAt(LocalDateTime.now());
+                }
+            } else {
+                user.setUpdatedAt(LocalDateTime.now());
+            }
+        }
+
+        userRepository.saveAll(users);
+
+        return "Users updated successfully.";
+    }
+
 }
+
