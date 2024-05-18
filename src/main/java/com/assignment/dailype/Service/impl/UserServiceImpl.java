@@ -1,6 +1,8 @@
 package com.assignment.dailype.Service.impl;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,5 +64,25 @@ public class UserServiceImpl implements UserService {
     private boolean isValidManagerId(UUID managerId) {
         // Check if the manager ID exists in the manager table
         return managerId != null;
+    }
+    
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public Optional<User> getUserById(UUID userId) {
+        return userRepository.findById(userId);
+    }
+
+    @Override
+    public Optional<User> getUserByMobileNumber(String mobNum) {
+        return userRepository.findByMobNum(mobNum);
+    }
+
+    @Override
+    public List<User> getUsersByManagerId(UUID managerId) {
+        return userRepository.findByManagerId(managerId);
     }
 }
