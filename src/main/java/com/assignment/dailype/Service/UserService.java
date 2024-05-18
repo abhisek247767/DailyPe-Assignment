@@ -16,5 +16,9 @@ public interface UserService {
 	Optional<User> getUserByMobileNumber(String mobNum);
 
 	List<User> getUsersByManagerId(UUID managerId);
+
+	String deleteUserById(UUID userId);
+
+	String deleteUserByMobileNumber(String mobNum);
 }
 

@@ -11,4 +11,5 @@ import com.assignment.dailype.Model.User;
 public interface UserRepository extends JpaRepository<User, UUID> {
     Optional<User> findByMobNum(String mobNum);
     List<User> findByManagerId(UUID managerId);
+
 }

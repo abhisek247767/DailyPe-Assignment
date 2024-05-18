@@ -85,4 +85,24 @@ public class UserServiceImpl implements UserService {
     public List<User> getUsersByManagerId(UUID managerId) {
         return userRepository.findByManagerId(managerId);
     }
+    
+    @Override
+    public String deleteUserById(UUID userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            userRepository.deleteById(userId);
+            return "User deleted successfully";
+        }
+        return "User ID not found";
+    }
+
+    @Override
+    public String deleteUserByMobileNumber(String mobNum) {
+        Optional<User> user = userRepository.findByMobNum(mobNum);
+        if (user.isPresent()) {
+            userRepository.delete(user.get());
+            return "User deleted successfully";
+        }
+        return "Mobile number not found";
+    }
 }

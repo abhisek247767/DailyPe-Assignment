@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.assignment.dailype.Model.User;
+import com.assignment.dailype.Requests.DeleteUserRequest;
 import com.assignment.dailype.Service.UserService;
 
 @RestController
@@ -50,5 +51,25 @@ public class UserController {
 
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok().body(users);
+    }
+    
+    
+    
+    @PostMapping("/delete_user")
+    public ResponseEntity<?> deleteUser(@RequestBody DeleteUserRequest deleteUserRequest) {
+        String result;
+        if (deleteUserRequest.getUserId() != null) {
+            UUID userId = UUID.fromString(deleteUserRequest.getUserId());
+            result = userService.deleteUserById(userId);
+        } else if (deleteUserRequest.getMobNum() != null) {
+            result = userService.deleteUserByMobileNumber(deleteUserRequest.getMobNum());
+        } else {
+            return ResponseEntity.badRequest().body("Either user_id or mob_num must be provided");
+        }
+        if (result.equals("User deleted successfully")) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 }
